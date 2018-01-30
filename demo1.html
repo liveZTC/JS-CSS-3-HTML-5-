@@ -1,0 +1,617 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>trigger demo</title>
+    <style>
+        div.hide {
+            display:none;
+        }
+        button {
+            margin: 10px;
+        }
+
+        div {
+            line-height:34px;
+        }
+
+        div.blue_bc {
+            background:lightblue;
+        }
+
+        div.yellow_bc {
+            background:yellow;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script>
+        const L = (val) => console.log.call(this, val);
+    </script>
+</head>
+<body>
+    <div class="hide" name="list">
+        1.bind的使用以及阻止默认事件
+        2.jq的事件绑定
+        3.某个对象是否为jq对象
+        4.原型
+        5.apply、call
+        6.closest
+        7.箭头函数this的指向
+        8.$.extend
+        9.去空白
+        10.toggle
+        11.遍历
+        12.数组
+        13.字符串操作
+        14.正则表达式
+    </div>
+    <button>Button #1</button>
+    <button>Button #2</button>
+    <div>button #1 clicks.</div>
+    <div>button #2 clicks.</div>
+
+    <script>
+        //获取DOM元素
+        (() => {
+            this.btn1 = $('button:first');
+            this.btn2 = $('button:last');
+            this.div1 = $('div:first');
+            this.div2 = $('div:last');
+            this.buttons = $('button');
+        })();
+
+
+        // 15.
+
+
+        // 14.正则表达式
+
+
+        // 13.字符串操作
+        (() => {
+
+            // 转字符串的三种方式
+            const num = 666;
+            var str = num.toString();
+            str = String(num);
+            str = "" + num;
+
+            // 分割字符串(split，第一个参数为分割的依据，第二个参数为返回数组的最大长度)
+
+            // 查找字符串(indexOf,lastIndexOf)
+
+            // 替换字符串(replace)
+
+            // 产找给定位置的字符串及其字符编码(charAt,charCodeAt)
+
+            // 字符串拼接('+',concat()。其中concat()可传入多个参数)
+
+            /*
+            * 切割字符串
+            * 1.slice(Number start, Number end)     不含end index
+            * 2.substring()
+            * 3.substr(Number start, length)
+            */
+
+            // 大小写转换(toLowerCase():转小写;toUpperCase():转大写)
+
+            // 字符串的匹配(match();exec();search())
+
+            /*
+            * 字符串的匹配
+            * 1.match()      字符串方法，返回匹配的字符串集合
+            * 2.search()     字符串方法，返回匹配的第一个字符串的索引
+            * 3.exec()       正则表达式的方法，找到匹配的第一个则返回，返回类数组
+            */
+            const source_str = 'Hello World',
+                reg = /o/g,
+                result1 = source_str.match(reg),        // ["o", "o"]
+                result2 = source_str.search(reg),       // 4
+                result3 = reg.exec(source_str);         // ["o", index: 4, input: "Hello World"]
+
+            // 字符串的比较(localeCompare)
+            L(source_str.localeCompare('hello world'));         // 1
+            L(source_str.localeCompare('Aello world'));         // 1
+            L(source_str.localeCompare('aello world'));         // 1
+            L(source_str.localeCompare('Nello world'));         // -1
+            
+            // 例题：写一个函数getSuffix，要求输入字符串，返回输入参数的后缀名(不带“.”)。
+            const getSuffix = (str) => str.lastIndexOf('.') < 0 ? '您输入的字符串不带后缀名，请检查后重试！' : str.slice(str.lastIndexOf('.') + 1);
+            
+            // 补充：一些改变样式的方法
+            str = ' 1.anchor(创建HTML锚，即变成超链接，参数为name的值，但是没有href属性，没有下划线与变色)：' + source_str.anchor();
+            str += '<br/> 2.big(大字体)：' + source_str.big();
+            str += '<br/> 3.blink(闪动)：' + source_str.blink();
+            str += '<br/> 4.bold(粗体)：' + source_str.bold();
+            str += '<br/> 5.fixed(打印机文字)：' + source_str.fixed();
+            str += '<br/> 6.fontcolor(指定颜色)：' + source_str.fontcolor('green');
+            str += '<br/> 7.fontsize(指定尺寸)：' + source_str.fontsize('30px');
+            str += '<br/> 8.italics(斜体)：' + source_str.italics();
+            str += '<br/> 9.link(显示为链接)：' + source_str.link();
+            str += '<br/> 10.small(小字体)：' + source_str.small();
+            str += '<br/> 11.strike(添加删除线)：' + source_str.strike();
+            str += '<br/> 12.sub(显示为下标)：' + source_str.sub();
+            str += '<br/> 13.sup(显示为上标)：' + source_str.sup();
+
+            $(btn1).add(btn2).add(div2).hide();
+
+            $(div1).html(str);
+
+        });
+
+
+        // 12.数组
+        (() => {
+            /*
+            * Array 在 Javascript 中是一个对象， Array 的索引是属性名。
+            * 事实上， Javascript 中的 “array” 有些误导性， Javascript 中的 Array 并不像大部分其他语言的数组。
+            * 首先， Javascript 中的 Array 在内存上并不连续，其次， Array 的索引并不是指偏移量。
+            * 实际上， Array 的索引也不是 Number 类型，而是 String 类型的。
+            * 我们可以正确使用如 arr[0] 的写法的原因是语言可以自动将 Number 类型的 0 转换成 String 类型的 “0″ 。
+            * 所以，在 Javascript 中从来就没有 Array 的索引，而只有类似 “0″ 、 “1″ 等等的属性。
+            * 有趣的是，每个 Array 对象都有一个 length 的属性，导致其表现地更像其他语言的数组。
+            * 但为什么在遍历 Array 对象的时候没有输出 length 这一条属性呢？
+            * 那是因为 for-in 只能遍历“可枚举的属性”， length 属于不可枚举属性，实际上， Array 对象还有许多其他不可枚举的属性。
+            */
+
+            /*
+            * 属性的可枚举性将影响到以下三个函数的结果
+            *  1.for-in
+            *  2.Object.keys
+            *  3.Object.stringify
+            */
+
+            const arr = [1, 2, 3];
+            arr.name = "Hello world";
+
+            for(let index in arr) {
+                console.log("arr[" + index + "] = " + arr[index]);
+            }
+
+        });
+
+
+        // 11.遍历
+        (() => {
+            const arr = ['A', 'B', 'C'],
+                obj = {
+                    name: 'A',
+                    age: 24
+                };
+
+            // 1.传统的for
+
+            /*
+            *为了避免遍历时执行多遍计算数组长度的操作, 影响效率, 建议在循环开始以变量的形式缓存下数组长度, 
+            *若在循环内部有可能改变数组长度, 请务必慎重处理, 避免数组越界。
+            */
+            //for (let i = 0, len = buttons.length; i < len; i++) {
+            //    L(i);
+            //}
+
+            //// 2.for-in，遍历对象是无序的，只遍历可枚举的属性
+            //for (i in arr) {
+            //    L(i);
+            //}
+            //for (key in obj) {
+            //    L(key)
+            //}
+
+            /*
+            *每次迭代操作会同时搜索实例或者原型属性，
+            *for-in 循环的每次迭代都会产生更多开销，
+            *因此要比其他循环类型慢，
+            *一般速度为其他类型循环的 1/7。
+            *因此，除非明确需要迭代一个属性数量未知的对象，否则应避免使用 for-in 循环。
+            *如果需要遍历一个数量有限的已知属性列表，使用其他循环会更快。
+            *如遍历对象obj:
+            */
+
+            //const objkeys = Object.keys(obj);
+            //for (let i = 0, len = objkeys.length; i < len; i++) {
+            //    L(obj[objkeys[i]]);
+            //}
+
+            // for-in 并不适合用来遍历 Array 中的元素，其更适合遍历对象中的属性，这也是其被创造出来的初衷。却有一种情况例外，就是稀疏数组。
+            //const newarr = [];
+            //[newarr[0], newarr[100], newarr[10000]] = [1, 100, 10000];
+            //for (let key in newarr) {
+            //    if (newarr.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) L(newarr[key]);
+            //}
+
+            // 3.forEach   将跳过没有值或已经删除的项
+            //arr[5] = 'F';
+            //arr.forEach((data) => L(data));
+
+            //forEach遍历的对象值在callback函数前就已经确定，在callback后所做的改变不会影响结果。
+            //arr.forEach((data) => {
+            //    arr[5] = 'F';
+            //    L(data)
+            //});
+
+            /*
+            * callback默认有三个参数:item、index、array
+            * 注意：1.forEach无法遍历对象。
+            *       2.此方法只在firefox和chrome中实现，在IE下无法使用。
+            *       3.此方法无法使用break或continue跳出循环，能使用return达到效果。
+            */
+
+            // 4.do-while
+
+            /*
+            * do/while的语法简化了循环的实现, 只保留对循环条件的判断, 所以我们要在循环内部构造出循环退出的条件, 
+            * 否则有可能造成死循环. 特别要注意的是: 使用 continue 跳出本次遍历时, 要保证循环能够自动进入到下一次遍历,
+            * 因此保证循环走到下一次遍历的语句需要放到 continue 前面执行, 建议置于循环头部。
+            */
+
+            //let i = 0, arrlen = arr.length;
+            //do {
+            //    L(arr[i]);
+            //    i++;
+            //}
+            //while (i < arrlen);
+
+            // 5.$.each()      遍历数组、对象
+            /*
+            * 回调函数是在当前DOM元素为上下文的语境中触发的，因此关键字 this 总是指向这个元素。$().each()同此。
+            * 
+            * 当对象中存在length属性时, $.each 内部使用for循环去遍历对象, 否则它将使用for in循环去遍历。
+            * 如果对象中存在 length 属性, 遍历深度以length属性为准, 即length多大, 遍历多少个元素。
+            * 如果对象中不存在 length 属性, 遍历深度以实际内部属性个数为准。
+            * 
+            * 使用return true 跳过当前循环步骤；使用return false 结束循环；不能使用break与continue。
+            */
+            //$.each(arr, (i, n) => L(n));
+
+
+            // 6.$(selecter).each()    遍历DOM对象
+
+            /*
+            * 用法基本同$.each()。$.each()用来遍历array和object；而$(selecter).each()用来遍历DOM对象。
+            * 
+            * callback的参数有index，item。其中item恒等于this，且为DOM对象，并非jQuery对象。
+            */
+            //$(buttons).each((i, item) => L($(item).text()));
+
+            // 7. map 只支持数组，但可鸭式辨型使用。
+            const arr71 = arr.map((r) =>r);
+            
+            //处理DOM对象
+            const values = Array.prototype.map.call(buttons, (o) => $(o).text());
+
+            //处理字符串
+            const strs = Array.prototype.map.call('Hello World！ '.trim(), (x) =>x).reverse().join(',');
+
+            //简单将['1','2','3']转换成[1,2,3]
+            const arr72 = ['1', '2', '3'].map(Number);
+
+            // 8.every 只支持数组，检验数组的每一项是否都满足
+            const arr8 = arr72.every(ele => ele >= 2);
+
+            // 9.filter 只支持数组，返回满足条件的项
+            const arr9 = arr72.filter(ele => ele >= 2);
+
+            // 10.reduce 只支持数组
+            const sum = arr72.reduce((x, y) => x + y),
+                conc_arr = [[1, 2], [3, 4], [5, 6]].reduce((x, y) =>x.concat(y));
+
+
+            // 比较各方法的效率
+            const array = [],
+                len = array.length = 10000000;  //一千万
+            L('START');
+
+            //for
+            var t1 = +new Date();
+            for (let i = 0; i < len; i++) { array[i] = i }
+            var t2 = +new Date();
+            var for_time = t2 - t1;
+            L('for:' + for_time);
+
+            //for-in
+            t1 = +new Date();
+            for (let i in array) { }
+            t2 = +new Date();
+            var for_in_time = t2 - t1;
+            L('for-in:' + for_in_time);
+
+            //forEach
+            t1 = +new Date();
+            array.forEach((index, ele) => { });
+            t2 = +new Date();
+            var forEach_time = t2 - t1;
+            L('forEach:' + forEach_time);
+
+            //do-while
+            t1 = +new Date();
+            var i = 0;
+            do {
+                i++;
+            } while (i < len + 1);
+            t2 = +new Date();
+            var doWhile_time = t2 - t1;
+            L('do-while:' + doWhile_time);
+
+            //$.each
+            t1 = +new Date();
+            $.each(array, (i, ele) => { });
+            t2 = +new Date();
+            var jq_each_time = t2 - t1;
+            L('$.each:' + jq_each_time);
+
+            //$(selecter).each
+            t1 = +new Date();
+            $(array).each((i, ele) => { });
+            t2 = +new Date();
+            var jq_selecter_each_time = t2 - t1;
+            L('$(selecter).each:' + jq_selecter_each_time);
+
+            //map
+            t1 = +new Date();
+            const map_arr1 = array.map((r) => { });
+            t2 = +new Date();
+            var map_time = t2 - t1;
+            L('map:' + map_time);
+
+            //every
+            t1 = +new Date();
+            array.every((r) => { });
+            t2 = +new Date();
+            var every_time = t2 - t1;
+            L('every:' + every_time);
+
+            //filter
+            t1 = +new Date();
+            const filter_arr = array.filter((r) => r > -1);
+            t2 = +new Date();
+            var filter_time = t2 - t1;
+            L('filter:' + filter_time);
+
+            //reduce
+            t1 = +new Date();
+            const reduce_sum = array.reduce((x, y) => x + y);
+            t2 = +new Date();
+            var reduce_time = t2 - t1;
+            L('reduce:' + reduce_time);
+            L(reduce_sum)
+
+
+            /*
+            * 总结：
+            * Chrome(Opera):
+            *       for、do-while(20) > forEach、reduce、$.each(200-250) > filter(450) > $(selecter).each(780) > map、for-in(1600-1900) (every:0)
+            * Firefox:
+            *       forEach、do-while(12)>reduce(53)>$.each、filter、for(150-250)>$(selecter).each、map(420)>for-in(3160)    (every:0)
+            *
+            * 我们翻看jquery代码就会知道, $.each方法内部通过调用for循环来实现, 
+            * 而$().each是先用jquery包裹数组对象, 然后再调用for循环, 因此后者效率略低于前者。
+            */
+        });
+
+
+        // 10.toggle
+        (() => {
+            const toggleFn = (obj, target, classNmae) => { obj.toggle(() =>target.addClass(classNmae), () =>target.removeClass(classNmae)) },
+                colors = ['blue', 'yellow', 'black'],
+                btn_len = $('button').length;
+
+            for (let i = 0; i < btn_len; i++) {
+
+            }
+            $.each(colors)
+            toggleFn(btn1, div1, 'blue_bc');
+            toggleFn(btn2, div2, 'yellow_bc');
+
+        });
+
+
+        // 9.去空白
+        (() => {
+            const atext = " A B C D   ";
+            L(atext);
+
+            //trim去除字符串两侧空白
+            L(atext.trim());
+
+            //正则取所有空白符(\s)
+            L(atext.replace(/\s/g, ''));
+        });
+
+
+        // 8.$.extend
+        (() => {
+            const obj1 = {
+                name: 'A',
+                age: 24,
+                job: 'athlete'
+            }, obj2 = {
+                name: 'B',
+                sex: 36
+            };
+
+            L($.extend(obj1, obj2));
+            L($.extend(true, obj1, obj2));
+            
+        });
+
+
+        // 7.箭头函数this的指向
+        (() => {
+            window.name = 'W';
+            const old_obj = {
+                name: 'O',
+                age: 24,
+                get_name: function () {
+                    this.name = 'G';
+                    const fn = function () {
+                        return this.name;
+                    }
+                    return fn();
+                }
+            }, new_obj = {
+                name: 'N',
+                age: 26,
+                get_name: () => {
+                    this.name = 'G';
+                    const fn = () =>this.name;
+                    return fn();
+                }
+            };
+
+            L(this.name);
+
+            //传统函数声明里的this指到window
+            L(old_obj.name);
+            L(old_obj.get_name());
+
+            //箭头函数里的this指到new_obj
+            L(new_obj.name);
+            L(new_obj.get_name());
+        });
+
+        
+        // 6.closest  匹配选择器的第一个祖先元素，从当前元素开始沿 DOM 树向上。
+        (() =>L($('span:first').closest('div')));
+
+
+        // 5.apply、call
+        (() => {
+
+            const C = (val) =>alert.call(this, val);
+
+            A(1);
+            C(2);
+
+            function A() {
+                alert.apply(this, arguments);
+            }
+
+            //常用的三种继承方式:apply、call、原型prototype
+        });
+
+
+        // 4.原型
+        (() => {
+            //const Person = (name, color) =>[this.name, this.color] = [name, color],
+            //    Programmer = (name, salaries) =>[this.name, this.salaries, Programmer.org, xyz] = [name, salaries, 'ASH', 123];
+
+            //Programmer.prototype = new Person();
+            //Programmer.prototype.sex = '男';
+
+            //var APerson = new Programmer('ZhangSan', 8888);
+
+            //L(APerson.name);       //APerson中有的                                       //ZhangSan
+            //L(APerson.sex);        //APerson中没有，但原型中有的                         //男
+            //L(APerson.color);      //APerson及其原型中都没有，但是上级函数中有的         //undifined
+
+            //判断属性是否为自有属性
+            //L(APerson.hasOwnProperty('name'));
+            //L(APerson.hasOwnProperty('sex'));
+            //L(APerson.hasOwnProperty('color'));
+            //L(APerson.hasOwnProperty('org'));            //静态成员属于类, 不会被对象继承; 须冠类名调用
+
+            //判断属性是否可用
+            //L('name' in APerson);
+            //L('sex' in APerson);
+            //L('color' in APerson);
+            //L('org' in APerson);
+
+            //遍历对象成员
+            //for (x in APerson) L(x);       //name salaries color sex
+
+            //遍历类成员
+            //for (x in Programmer) L(x);    //org       
+
+            //constructor属于prototype，既然Programmer继承于Person，则打印Programmer
+            //L(APerson.constructor);   
+
+            //propertyIsEnumerable
+            //L(APerson.propertyIsEnumerable('name'));
+            //L(APerson.propertyIsEnumerable('salaries'));
+            //L(APerson.propertyIsEnumerable('sex'));
+            //L(APerson.propertyIsEnumerable('color'));
+            //L(APerson.propertyIsEnumerable('org'));
+
+            //isPrototypeOf:是不是参数的原型对象
+            //L(Programmer.prototype.isPrototypeOf(APerson));
+            //L(Person.prototype.isPrototypeOf(APerson));
+            //L(Object.prototype.isPrototypeOf(APerson));
+            //L(Object.prototype.isPrototypeOf('aaa'));
+            //L(String.prototype.isPrototypeOf(new String()));
+
+            /*
+            * 访问属性的顺序为:
+            * 如果原型链，作用域链上有相同的方法。那么会优先找作用域链上的，找到并执行，原型链上的方法就不执行了。同样的，属性的查找也是这么个顺序。
+            * 原型链上：实例->原型->Object
+            */
+            function _Box(name) {
+                [this.name, this.run] = [name, () =>'实例的方法：' + this.name];
+            }
+
+            _Box.prototype.run = () => '原型的方法：' + this.name;
+
+            var box = new _Box('a');
+
+            //L(box.run());
+
+            //L(box.__proto__.run());
+
+            /*
+            * new 的三步过程：
+            * 1.const box = {};
+            * 2 box.__proto__ = _Box.prototype;
+            * 3._Box.call(box, 'a');
+            */
+
+            /*
+            * 为什么Object是原型链上的最终点?
+            */
+            L(_Box.prototype.__proto__);
+            L(_Box.prototype.__proto__.__proto__);
+            L(Object.prototype.__proto__);
+
+        });
+
+
+        // 3.某个对象是否为jq对象
+        (() => {
+            const js_obj = document.getElementsByTagName("button")[0],
+                jq_obj = $("button:first");
+
+            L(s_obj instanceof jQuery);
+            L(jq_obj instanceof jQuery);
+        });
+
+
+        // 2.jq的事件绑定
+        (() => {
+            var events = "blur focus focusin focusout resize scroll click dblclick ";
+            events += "mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave ";
+            events += "change select submit keydown keypress keyup contextmenu";
+
+            $.each(("").split(" "), (i, name) => {
+                $.fn[name] = (data, fn) => arguments.length > 0 ? this.on(name, null, data, fn) : this.trigger(name);
+            });
+        });
+
+
+        // 1.bind的使用以及阻止默认事件
+        (() => {
+            const data = {
+                name: "aaa",
+                age: 24
+            }
+            //左单击
+            $("button:first").bind("click", data, (e) => L(e.data["name"]));
+
+            //双击
+            $("button:first").bind("dblclick", data, (e) => L(e.data["age"]));
+
+            //去除默认事件
+            $(document).bind("contextmenu", (e) => e.preventDefault());
+        });
+
+    </script>
+
+</body>
+</html>
